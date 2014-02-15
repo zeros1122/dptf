@@ -55,7 +55,7 @@ UIntN PixelClockDevice::getDomainIndex() const
 
 Bool PixelClockDevice::isPixelClockDevice(const DomainProxy& domain)
 {
-    return (domain.getPixelClockControl().supportsControl() && 
+    return (domain.getPixelClockControl().supportsPixelClockControls() && 
         domain.getPixelClockControl().supportsStatus());
 }
 

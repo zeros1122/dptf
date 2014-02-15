@@ -43,7 +43,7 @@ UIntN FivrDevice::getDomainIndex() const
 
 Bool FivrDevice::isFivrDevice(const DomainProxy& domain)
 {
-    return domain.getRadioFrequencyControl().supportsControl();
+    return domain.getRadioFrequencyControl().supportsRfControls();
 }
 
 void FivrDevice::setFrequency(const Frequency& newFrequency)
