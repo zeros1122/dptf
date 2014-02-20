@@ -314,7 +314,7 @@ TEST_F(ActPolicyWithFivrParticipants, ReactsToRadioConnectionStatusConnected)
 }
 
 const char* ExpectedStatusValuesChanged = "\
-<!-- format_id=99-8E-FD-5B-E2-BA-47-86-A2-99-26-AB-5F-70-E5-2B -->\n\
+<!-- format_id=CE-C4-49-18-3A-24-F3-49-B8-D5-F9-70-02-F3-8E-6A -->\n\
 <act_policy_status>\n\
 \t<fivr_device_list>\n\
 \t\t<fivr_device>\n\
