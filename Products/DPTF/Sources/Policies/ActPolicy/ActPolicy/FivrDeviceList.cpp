@@ -49,10 +49,10 @@ void FivrDeviceList::remove(const DomainProxy& domain)
     }
 }
 
-const Frequency fivrClockHigh(1470 * 1000 * 1000); // 147.0 MHz -- alternative
-const Frequency fivrClockLow(1395 * 1000 * 1000); // 139.5 MHz -- default
-const Frequency minimumFrequency(1805 * 1000 * 1000); // 180.5 MHz
-const Frequency maximumFrequency(1995 * 1000 * 1000); // 199.5 MHz
+const Frequency fivrClockHigh((UInt64)(147.0 * 1000 * 1000)); // 147.0 MHz -- alternative
+const Frequency fivrClockLow((UInt64)(139.5 * 1000 * 1000)); // 139.5 MHz -- default
+const Frequency minimumFrequency((UInt64)(1805 * 1000 * 1000)); // 1.805 GHz
+const Frequency maximumFrequency((UInt64)(1995 * 1000 * 1000)); // 1.995 GHz
 
 void FivrDeviceList::adjustFrequencies(const RadioDeviceList& radioDevices)
 {

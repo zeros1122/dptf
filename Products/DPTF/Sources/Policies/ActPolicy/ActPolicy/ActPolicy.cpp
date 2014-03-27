@@ -19,10 +19,11 @@
 #include "ActPolicy.h"
 using namespace std;
 
-static const Guid MyGuid(0xCE, 0xC4, 0x49, 0x18, 0x3A, 0x24, 0xF3, 0x49, 0xB8, 0xD5, 0xF9, 0x70, 0x02, 0xF3, 0x8E, 0x6A);                         
+static const Guid MyGuid(0x49, 0x18, 0xCE, 0xC4, 0x3A, 0x24, 0xF3, 0x49, 0xB8, 0xD5, 0xF9, 0x70, 0x02, 0xF3, 0x8E, 0x6A);                         
 static const string MyName("ACT Policy");
 
 ActPolicy::ActPolicy()
+    : m_filterForGps(false)
 {
     
 }
@@ -34,8 +35,16 @@ ActPolicy::~ActPolicy()
 
 void ActPolicy::onCreate()
 {
-    getPolicyServices().policyEventRegistration->registerEvent(PolicyEvent::DomainRadioConnectionStatusChanged); // Connected / Not Connected status changed
-    getPolicyServices().policyEventRegistration->registerEvent(PolicyEvent::DomainRfProfileChanged); // ACT Channel Band Changed
+    getPolicyServices().policyEventRegistration->registerEvent(PolicyEvent::DomainRadioConnectionStatusChanged);
+    getPolicyServices().policyEventRegistration->registerEvent(PolicyEvent::DomainRfProfileChanged);
+    try
+    {
+        m_filterForGps = getPolicyServices().platformConfigurationData->readConfigurationUInt32("FilterForGps") > 0;
+    }
+    catch (...)
+    {
+        m_filterForGps = true;
+    }
 }
 
 void ActPolicy::onDestroy()
@@ -93,11 +102,15 @@ string ActPolicy::getName(void) const
 
 void ActPolicy::onBindParticipant(UIntN participantIndex) 
 {
+    getPolicyServices().messageLogging->writeMessageDebug(
+        PolicyMessage(FLF, "Binding participant.", participantIndex));
     getParticipantTracker().remember(participantIndex);
 }
 
 void ActPolicy::onUnbindParticipant(UIntN participantIndex)
 {
+    getPolicyServices().messageLogging->writeMessageDebug(
+        PolicyMessage(FLF, "Unbinding participant.", participantIndex));
     getParticipantTracker().forget(participantIndex);
 }
 
@@ -105,10 +118,12 @@ void ActPolicy::onBindDomain(UIntN participantIndex, UIntN domainIndex)
 {
     if (getParticipantTracker().remembers(participantIndex))
     {
+        getPolicyServices().messageLogging->writeMessageDebug(
+            PolicyMessage(FLF, "Binding domain for participant.", participantIndex, domainIndex));
         DomainProxy& domain = getParticipantTracker()[participantIndex].bindDomain(domainIndex);
         if (PixelClockDevice::isPixelClockDevice(domain))
         {
-            m_pixelClockDevices.add(PixelClockDevice(domain));
+            m_pixelClockDevices.add(PixelClockDevice(domain, m_filterForGps));
             m_pixelClockDevices.adjustFrequencies(m_radioDevices);
         }
         else if (FivrDevice::isFivrDevice(domain))
@@ -128,6 +143,8 @@ void ActPolicy::onUnbindDomain(UIntN participantIndex, UIntN domainIndex)
 {
     if (getParticipantTracker().remembers(participantIndex))
     {
+        getPolicyServices().messageLogging->writeMessageDebug(
+            PolicyMessage(FLF, "Unbinding domain for participant.", participantIndex, domainIndex));
         DomainProxy& domain = getParticipantTracker()[participantIndex][domainIndex];
         if (PixelClockDevice::isPixelClockDevice(domain))
         {

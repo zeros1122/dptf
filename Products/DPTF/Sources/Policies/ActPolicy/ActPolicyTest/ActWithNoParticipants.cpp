@@ -18,7 +18,7 @@
 
 #include "ActWithNoParticipants.h"
 
-static const Guid policyGuid(0xCE, 0xC4, 0x49, 0x18, 0x3A, 0x24, 0xF3, 0x49, 0xB8, 0xD5, 0xF9, 0x70, 0x02, 0xF3, 0x8E, 0x6A);                         
+static const Guid policyGuid(0x49, 0x18, 0xCE, 0xC4, 0x3A, 0x24, 0xF3, 0x49, 0xB8, 0xD5, 0xF9, 0x70, 0x02, 0xF3, 0x8E, 0x6A);                         
 static const string policyName("ACT Policy");
 
 TEST_F(ActPolicyWithNoParticipants, CanBeCreated)
@@ -95,7 +95,7 @@ TEST_F(ActPolicyWithNoParticipants, DoesNothingWhenDisabled)
 }
 
 const char* ExpectedStatus = "\
-<!-- format_id=CE-C4-49-18-3A-24-F3-49-B8-D5-F9-70-02-F3-8E-6A -->\n\
+<!-- format_id=49-18-CE-C4-3A-24-F3-49-B8-D5-F9-70-02-F3-8E-6A -->\n\
 <act_policy_status>\n\
 \t<fivr_device_list/>\n\
 \t<radio_device_list/>\n\

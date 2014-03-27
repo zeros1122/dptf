@@ -27,9 +27,12 @@ PixelClockFrequencyTable CandidateFrequencyGenerator::generateSscDisabledCandida
     PixelClockFrequencyTable candidateFrequenciesList;
     for (UIntN pixelClockIndex = 0; pixelClockIndex < dataSet.getCount(); pixelClockIndex++)
     {
-        std::vector<Frequency> candidateFrequencies = generateCandidateFrequencies(
-            dataSet[pixelClockIndex].getSscDisabledNudgeFrequency(), capabilities);
-        candidateFrequenciesList.add(candidateFrequencies);
+        if (dataSet[pixelClockIndex].getPanelInputFrequencySpecification() > Frequency(0))
+        {
+            std::vector<Frequency> candidateFrequencies = generateCandidateFrequencies(
+                dataSet[pixelClockIndex].getPanelInputFrequencySpecification(), capabilities);
+            candidateFrequenciesList.add(candidateFrequencies);
+        }
     }
     candidateFrequenciesList.setSpreadType(PixelClockSpreadType::Center);
     candidateFrequenciesList.setSpreadPercentage(SscDisabledSpread);
@@ -42,9 +45,12 @@ PixelClockFrequencyTable CandidateFrequencyGenerator::generateSscEnabledCandidat
     PixelClockFrequencyTable candidateFrequenciesList;
     for (UIntN pixelClockIndex = 0; pixelClockIndex < dataSet.getCount(); pixelClockIndex++)
     {
-        std::vector<Frequency> candidateSscEnabledFrequencies = generateCandidateFrequencies(
-            dataSet[pixelClockIndex].getSscEnabledNudgeFrequency(), capabilities);
-        candidateFrequenciesList.add(candidateSscEnabledFrequencies);
+        if (dataSet[pixelClockIndex].getPanelInputFrequencySpecification() > Frequency(0))
+        {
+            std::vector<Frequency> candidateSscEnabledFrequencies = generateCandidateFrequencies(
+                dataSet[pixelClockIndex].getPanelInputFrequencySpecification(), capabilities);
+            candidateFrequenciesList.add(candidateSscEnabledFrequencies);
+        }
     }
     candidateFrequenciesList.setSpreadType(capabilities.getSscSpreadDirection());
     double halfSpreadPercentage = capabilities.getSpreadPercentage() / (double)2;
@@ -66,6 +72,10 @@ std::vector<Frequency> CandidateFrequencyGenerator::generateCandidateFrequencies
 Frequency CandidateFrequencyGenerator::calculateStepping(const Frequency& clockFrequency, 
     const PixelClockCapabilities& capabilities)
 {
+    if (capabilities.getClockDeviation() == 0)
+    {
+        throw dptf_exception("Cannot calculate stepping since clock deviation is 0.");
+    }
     double clockDeviationInPercent = (double)capabilities.getClockDeviation() / (double)100;
     UInt64 panelFrequencyRange = (UInt64)((double)clockFrequency * clockDeviationInPercent);
     Frequency stepping = (UInt64)((double)0.2 * (double)panelFrequencyRange);

@@ -30,7 +30,7 @@ class dptf_export PixelClockDevice
 {
 public:
 
-    PixelClockDevice(DomainProxy& domain);
+    PixelClockDevice(DomainProxy& domain, Bool filterForGps);
     ~PixelClockDevice();
 
     UIntN getParticipantIndex() const;
@@ -45,7 +45,10 @@ private:
     PixelClockDataSet m_dataSet;
     DomainProxy* m_domain;
     PixelClockFrequencyTable m_sscDisabledCandidateFrequencyTable;
+    PixelClockFrequencyTable m_sscDisabledCandidateFrequencyTableFiltered;
     PixelClockFrequencyTable m_sscEnabledCandidateFrequencyTable;
+    PixelClockFrequencyTable m_sscEnabledCandidateFrequencyTableFiltered;
+    Bool m_filterForGps;
 
     std::vector<PixelClockData> selectBestFrequenciesForEachPixelClock(
         const PixelClockFrequencyCostTable& sscDisabledCostTable, 

@@ -61,6 +61,7 @@ private:
     RadioDeviceList m_radioDevices;
     PixelClockDeviceList m_pixelClockDevices;
     FivrDeviceList m_fivrDevices;
+    Bool m_filterForGps;
 
     void adjustFivrAndPixelClockFrequencies();
     void setDomainFrequency(DomainProxy& sourceDomain, DomainProxy &targetDomain);

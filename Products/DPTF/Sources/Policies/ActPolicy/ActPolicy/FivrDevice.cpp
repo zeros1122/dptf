@@ -63,7 +63,9 @@ XmlNode* FivrDevice::getXml() const
 {
     XmlNode* device = XmlNode::createWrapperElement("fivr_device");
     device->addChild(XmlNode::createDataElement("participant_index", friendlyValue(getParticipantIndex())));
+    device->addChild(XmlNode::createDataElement("participant_name", m_domain->getParticipantProperties().getName()));
     device->addChild(XmlNode::createDataElement("domain_index", friendlyValue(getDomainIndex())));
+    device->addChild(XmlNode::createDataElement("domain_name", m_domain->getDomainProperties().getName()));
     device->addChild(m_domain->getRadioFrequencyControl().getXml());
     return device;
 }

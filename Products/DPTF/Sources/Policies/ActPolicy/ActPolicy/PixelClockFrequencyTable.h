@@ -20,6 +20,7 @@
 #include "Dptf.h"
 #include "PixelClockSpreadType.h"
 #include <vector>
+#include "XmlNode.h"
 
 class dptf_export PixelClockFrequencyTable
 {
@@ -36,6 +37,7 @@ public:
     PixelClockSpreadType::Type getSpreadType() const;
     void setSpreadPercentage(double spreadPercentage);
     double getSpreadPercentage() const;
+    XmlNode* getXml() const;
     
 private:
 

@@ -23,8 +23,8 @@
 #include "StatusFormat.h"
 using namespace StatusFormat;
 
-PixelClockDevice::PixelClockDevice(DomainProxy& domain)
-    : m_domain(&domain), 
+PixelClockDevice::PixelClockDevice(DomainProxy& domain, Bool filterForGps)
+    : m_domain(&domain), m_filterForGps(filterForGps),
     m_capabilities(PixelClockPanelType::Edp, 0, false, false, PixelClockChannelType::Single, false, 
         PixelClockSpreadType::None, 0.0),
     m_dataSet(std::vector<PixelClockData>())
@@ -32,10 +32,21 @@ PixelClockDevice::PixelClockDevice(DomainProxy& domain)
     throwIfNotPixelClockDevice();
     m_capabilities = m_domain->getPixelClockControl().getPixelClockCapabilities();
     m_dataSet = m_domain->getPixelClockControl().getPixelClockDataSet();
-    m_sscDisabledCandidateFrequencyTable = GpsFilter().filter(
-        CandidateFrequencyGenerator::generateSscDisabledCandidates(m_capabilities, m_dataSet));
-    m_sscEnabledCandidateFrequencyTable = GpsFilter().filter(
-        CandidateFrequencyGenerator::generateSscEnabledCandidates(m_capabilities, m_dataSet));
+
+    m_sscDisabledCandidateFrequencyTable = 
+        CandidateFrequencyGenerator::generateSscDisabledCandidates(m_capabilities, m_dataSet);
+    m_sscEnabledCandidateFrequencyTable =
+        CandidateFrequencyGenerator::generateSscEnabledCandidates(m_capabilities, m_dataSet);
+    if (m_filterForGps)
+    {
+        m_sscDisabledCandidateFrequencyTableFiltered = GpsFilter().filter(m_sscDisabledCandidateFrequencyTable);
+        m_sscEnabledCandidateFrequencyTableFiltered = GpsFilter().filter(m_sscEnabledCandidateFrequencyTable);
+    }
+    else
+    {
+        m_sscDisabledCandidateFrequencyTableFiltered = m_sscDisabledCandidateFrequencyTable;
+        m_sscEnabledCandidateFrequencyTableFiltered = m_sscEnabledCandidateFrequencyTable;
+    }
 }
 
 PixelClockDevice::~PixelClockDevice()
@@ -62,9 +73,9 @@ Bool PixelClockDevice::isPixelClockDevice(const DomainProxy& domain)
 void PixelClockDevice::adjustFrequencies(const RadioDeviceList& radioDevices)
 {
     RadioDevice radio = radioDevices.getHighestPriorityRadio();
-    PixelClockFrequencyCostTable sscDisabledCostTable(m_sscDisabledCandidateFrequencyTable, 
+    PixelClockFrequencyCostTable sscDisabledCostTable(m_sscDisabledCandidateFrequencyTableFiltered, 
         radio.getLeftFrequency(), radio.getRightFrequency());
-    PixelClockFrequencyCostTable sscEnabledCostTable(m_sscEnabledCandidateFrequencyTable, 
+    PixelClockFrequencyCostTable sscEnabledCostTable(m_sscEnabledCandidateFrequencyTableFiltered, 
         radio.getLeftFrequency(), radio.getRightFrequency());
     std::vector<PixelClockData> bestFrequencies = selectBestFrequenciesForEachPixelClock(
         sscDisabledCostTable, sscEnabledCostTable);
@@ -188,8 +199,37 @@ XmlNode* PixelClockDevice::getXml() const
 {
     XmlNode* device = XmlNode::createWrapperElement("pixel_clock_device");
     device->addChild(XmlNode::createDataElement("participant_index", friendlyValue(getParticipantIndex())));
+    device->addChild(XmlNode::createDataElement("participant_name", m_domain->getParticipantProperties().getName()));
     device->addChild(XmlNode::createDataElement("domain_index", friendlyValue(getDomainIndex())));
+    device->addChild(XmlNode::createDataElement("domain_name", m_domain->getDomainProperties().getName()));
     device->addChild(m_capabilities.getXml());
     device->addChild(m_dataSet.getXml());
+
+    XmlNode* candidateSets = XmlNode::createWrapperElement("candidate_sets");
+    if (m_filterForGps)
+    {
+        XmlNode* candidateSet1 = XmlNode::createWrapperElement("candidate_set");
+        candidateSet1->addChild(XmlNode::createDataElement("name", "SSC Disabled Candidate Set (GPS Filtered)"));
+        candidateSet1->addChild(m_sscDisabledCandidateFrequencyTableFiltered.getXml());
+        candidateSets->addChild(candidateSet1);
+
+        XmlNode* candidateSet2 = XmlNode::createWrapperElement("candidate_set");
+        candidateSet2->addChild(XmlNode::createDataElement("name", "SSC Enabled Candidate Set (GPS Filtered)"));
+        candidateSet2->addChild(m_sscEnabledCandidateFrequencyTableFiltered.getXml());
+        candidateSets->addChild(candidateSet2);
+    }
+    else
+    {
+        XmlNode* candidateSet1 = XmlNode::createWrapperElement("candidate_set");
+        candidateSet1->addChild(XmlNode::createDataElement("name", "SSC Disabled Candidate Set"));
+        candidateSet1->addChild(m_sscDisabledCandidateFrequencyTable.getXml());
+        candidateSets->addChild(candidateSet1);
+
+        XmlNode* candidateSet2 = XmlNode::createWrapperElement("candidate_set");
+        candidateSet2->addChild(XmlNode::createDataElement("name", "SSC Enabled Candidate Set"));
+        candidateSet2->addChild(m_sscEnabledCandidateFrequencyTable.getXml());
+        candidateSets->addChild(candidateSet2);
+    }
+    device->addChild(candidateSets);
     return device;
 }

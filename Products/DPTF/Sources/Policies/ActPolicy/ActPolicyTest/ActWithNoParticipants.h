@@ -36,6 +36,7 @@ public:
     MockPlatformNotification platformNotification;
     MockPlatformConfigurationDataInterface platformConfiguration;
     MockEventRegistration eventRegistration;
+    MockMessageLoggingInterface messages;
 
     ActPolicyWithNoParticipants::ActPolicyWithNoParticipants(void)
     {
@@ -48,6 +49,7 @@ public:
         policyServices.platformNotification = &platformNotification;
         policyServices.platformConfigurationData = &platformConfiguration;
         policyServices.policyEventRegistration = &eventRegistration;
+        policyServices.messageLogging = &messages;
     }
 
     virtual void TearDown() override

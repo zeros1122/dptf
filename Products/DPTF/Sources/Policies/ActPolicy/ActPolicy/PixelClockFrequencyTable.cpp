@@ -17,6 +17,7 @@
 ******************************************************************************/
 
 #include "PixelClockFrequencyTable.h"
+#include "XmlNode.h"
 
 
 PixelClockFrequencyTable::PixelClockFrequencyTable()
@@ -63,4 +64,25 @@ double PixelClockFrequencyTable::getSpreadPercentage() const
 PixelClockSpreadType::Type PixelClockFrequencyTable::getSpreadType() const
 {
     return m_spreadType;
+}
+
+XmlNode* PixelClockFrequencyTable::getXml() const
+{
+    XmlNode* device = XmlNode::createWrapperElement("pixel_clock_frequency_table");
+    device->addChild(XmlNode::createDataElement("spread_type", PixelClockSpreadType::ToString(m_spreadType)));
+    device->addChild(XmlNode::createDataElement("spread_percentage", Percentage(m_spreadPercentage).toString()));
+    XmlNode* pixelClockFrequencies = XmlNode::createWrapperElement("pixel_clock_frequencies");
+    for (UIntN pcIndex = 0; pcIndex < m_frequencyLists.size(); pcIndex++)
+    {
+        XmlNode* pixelClock = XmlNode::createWrapperElement("pixel_clock");
+        pixelClock->addChild(XmlNode::createDataElement("pixel_clock_number", std::to_string(pcIndex)));
+        const auto& list = m_frequencyLists[pcIndex];
+        for (auto frequency = list.begin(); frequency != list.end(); frequency++)
+        {
+            pixelClock->addChild(XmlNode::createDataElement("frequency", frequency->toString()));
+        }
+        pixelClockFrequencies->addChild(pixelClock);
+    }
+    device->addChild(pixelClockFrequencies);
+    return device;
 }

@@ -27,7 +27,14 @@ RadioDevice::RadioDevice(DomainProxy& domain)
 {
     throwIfNotRadioDevice();
     m_radioProfile = m_domain->getRadioFrequencyControl().getProfileData();
-    m_connectionStatus = m_radioProfile.getSupplementalData().getRadioConnectionStatus();
+    if (m_domain->getDomainProperties().getDomainType() == DomainType::WWan)
+    {
+        m_connectionStatus = RadioConnectionStatus::Connected;
+    }
+    else
+    {
+        m_connectionStatus = m_radioProfile.getSupplementalData().getRadioConnectionStatus();
+    }
 }
 
 RadioDevice::~RadioDevice()
@@ -62,13 +69,20 @@ Bool RadioDevice::isConnected() const
 
 void RadioDevice::updateRadioFrequencyProfile()
 {
+    m_domain->getRadioFrequencyControl().invalidateProfileData();
     m_radioProfile = m_domain->getRadioFrequencyControl().getProfileData();
-    m_connectionStatus = m_radioProfile.getSupplementalData().getRadioConnectionStatus();
+    if (m_domain->getDomainProperties().getDomainType() != DomainType::WWan)
+    {
+        m_connectionStatus = m_radioProfile.getSupplementalData().getRadioConnectionStatus();
+    }
 }
 
 void RadioDevice::updateRadioConnectionStatus(RadioConnectionStatus::Type radioConnectionStatus)
 {
-    m_connectionStatus = radioConnectionStatus;
+    if (m_domain->getDomainProperties().getDomainType() != DomainType::WWan)
+    {
+        m_connectionStatus = radioConnectionStatus;
+    }
 }
 
 Bool RadioDevice::isRadioDevice(const DomainProxy& domain)
@@ -118,7 +132,9 @@ XmlNode* RadioDevice::getXml() const
 {
     XmlNode* device = XmlNode::createWrapperElement("radio_device");
     device->addChild(XmlNode::createDataElement("participant_index", friendlyValue(getParticipantIndex())));
+    device->addChild(XmlNode::createDataElement("participant_name", m_domain->getParticipantProperties().getName()));
     device->addChild(XmlNode::createDataElement("domain_index", friendlyValue(getDomainIndex())));
+    device->addChild(XmlNode::createDataElement("domain_name", m_domain->getDomainProperties().getName()));
     device->addChild(m_radioProfile.getXml());
     device->addChild(XmlNode::createDataElement("last_known_connection_status", 
         RadioConnectionStatus::ToString(m_connectionStatus)));

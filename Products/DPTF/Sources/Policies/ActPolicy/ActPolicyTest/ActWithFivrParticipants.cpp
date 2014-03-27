@@ -21,8 +21,8 @@ using ::testing::Return;
 using ::testing::Property;
 using ::testing::_;
 
-const Frequency fivrClockLow(1395 * 1000 * 1000); // 139.5 MHz
-const Frequency fivrClockHigh(1470 * 1000 * 1000); // 147.0 MHz
+const Frequency fivrClockLow((UInt64)(139.5 * 1000 * 1000)); // 139.5 MHz
+const Frequency fivrClockHigh((UInt64)(147.0 * 1000 * 1000)); // 147.0 MHz
 
 TEST_F(ActPolicyWithFivrParticipants, CanBindParticipant)
 {
@@ -53,8 +53,8 @@ TEST_F(ActPolicyWithFivrParticipants, CanAddFivrDevice)
         .WillOnce(Return(policyServicesObjects.participantProperties.at(1)));
     EXPECT_CALL(participantProperties, getDomainPropertiesSet(1))
         .WillOnce(Return(createDomainPropertiesSet(DomainType::Processor, false, false, true, true)));
-    const Frequency centerFrequency(1730 * 1000 * 1000);
-    const Frequency spread(30 * 1000 * 1000); // 30.0 MHz
+    const Frequency centerFrequency((UInt64)(173.0 * 1000 * 1000));
+    const Frequency spread(3 * 1000 * 1000); // 3.0 MHz
     RfProfileSupplementalData supplementalData(0, 0, 0, 0, RadioConnectionStatus::Connected, 0);
     RfProfileData fivrProfile(centerFrequency, spread / 2, spread / 2, supplementalData);
     EXPECT_CALL(rfControl, setRfProfileCenterFrequency(1, 0, fivrClockLow))
@@ -71,8 +71,8 @@ TEST_F(ActPolicyWithFivrParticipants, CanAddFivrDeviceAndRadioDeviceWithinFreqSp
         .WillOnce(Return(policyServicesObjects.participantProperties.at(1)));
     EXPECT_CALL(participantProperties, getDomainPropertiesSet(1))
         .WillOnce(Return(createDomainPropertiesSet(DomainType::Processor, false, false, true, true)));
-    const Frequency fivrCenterFrequency(1730 * 1000 * 1000);
-    const Frequency fivrSpread(30 * 1000 * 1000); // 30.0 MHz
+    const Frequency fivrCenterFrequency((UInt64)(173.0 * 1000 * 1000));
+    const Frequency fivrSpread(3 * 1000 * 1000); // 3.0 MHz
     RfProfileSupplementalData fivrSupplementalData(0, 0, 0, 0, RadioConnectionStatus::Connected, 0);
     RfProfileData fivrProfile(fivrCenterFrequency, fivrSpread / 2, fivrSpread / 2, 
         fivrSupplementalData);
@@ -85,8 +85,8 @@ TEST_F(ActPolicyWithFivrParticipants, CanAddFivrDeviceAndRadioDeviceWithinFreqSp
         .WillOnce(Return(policyServicesObjects.participantProperties.at(2)));
     EXPECT_CALL(participantProperties, getDomainPropertiesSet(2))
         .WillOnce(Return(createDomainPropertiesSet(DomainType::WWan, false, false, false, true)));
-    const Frequency wwanCenterFrequency(1900 * 1000 * 1000); // 190.0 MHz
-    const Frequency wwanSpread(50 * 1000 * 1000); // 50.0 MHz
+    const Frequency wwanCenterFrequency((UInt64)(1900 * 1000 * 1000)); // 1.900 GHz
+    const Frequency wwanSpread(5 * 1000 * 1000); // 5.0 MHz
     RfProfileSupplementalData wwanSupplementalData(0, 0, 0, 0, RadioConnectionStatus::Connected, 0);
     RfProfileData wwanProfile(wwanCenterFrequency, wwanSpread / 2, wwanSpread / 2, 
         wwanSupplementalData);
@@ -106,8 +106,8 @@ TEST_F(ActPolicyWithFivrParticipants, CanAddFivrDeviceAndRadioDeviceOutsideofFre
         .WillOnce(Return(policyServicesObjects.participantProperties.at(1)));
     EXPECT_CALL(participantProperties, getDomainPropertiesSet(1))
         .WillOnce(Return(createDomainPropertiesSet(DomainType::Processor, false, false, true, true)));
-    const Frequency fivrCenterFrequency(1730 * 1000 * 1000); // 173.0 MHz
-    const Frequency fivrSpread(30 * 1000 * 1000); // 30.0 MHz
+    const Frequency fivrCenterFrequency((UInt64)(173.0 * 1000 * 1000)); // 173.0 MHz
+    const Frequency fivrSpread(3 * 1000 * 1000); // 3.0 MHz
     RfProfileSupplementalData fivrSupplementalData(0, 0, 0, 0, RadioConnectionStatus::Connected, 0);
     RfProfileData fivrProfile(fivrCenterFrequency, fivrSpread / 2, fivrSpread / 2, 
         fivrSupplementalData);
@@ -120,8 +120,8 @@ TEST_F(ActPolicyWithFivrParticipants, CanAddFivrDeviceAndRadioDeviceOutsideofFre
         .WillOnce(Return(policyServicesObjects.participantProperties.at(2)));
     EXPECT_CALL(participantProperties, getDomainPropertiesSet(2))
         .WillOnce(Return(createDomainPropertiesSet(DomainType::WWan, false, false, false, true)));
-    const Frequency wwanCenterFrequency(2100 * 1000 * 1000); // 210.0 MHz
-    const Frequency wwanSpread(50 * 1000 * 1000); // 50.0 MHz
+    const Frequency wwanCenterFrequency((UInt64)(210.0 * 1000 * 1000)); // 210.0 MHz
+    const Frequency wwanSpread(5 * 1000 * 1000); // 5.0 MHz
     RfProfileSupplementalData wwanSupplementalData(0, 0, 0, 0, RadioConnectionStatus::Connected, 0);
     RfProfileData wwanProfile(wwanCenterFrequency, wwanSpread / 2, wwanSpread / 2, 
         wwanSupplementalData);
@@ -141,8 +141,8 @@ TEST_F(ActPolicyWithFivrParticipants, CanAddFivrDeviceAndTwoRadioDeviceWithinFre
         .WillOnce(Return(policyServicesObjects.participantProperties.at(1)));
     EXPECT_CALL(participantProperties, getDomainPropertiesSet(1))
         .WillOnce(Return(createDomainPropertiesSet(DomainType::Processor, false, false, true, true)));
-    const Frequency fivrCenterFrequency(1730 * 1000 * 1000);
-    const Frequency fivrSpread(30 * 1000 * 1000); // 30.0 MHz
+    const Frequency fivrCenterFrequency((UInt64)(173.0 * 1000 * 1000));
+    const Frequency fivrSpread(3 * 1000 * 1000); // 3.0 MHz
     RfProfileSupplementalData fivrSupplementalData(0, 0, 0, 0, RadioConnectionStatus::Connected, 0);
     RfProfileData fivrProfile(fivrCenterFrequency, fivrSpread / 2, fivrSpread / 2, 
         fivrSupplementalData);
@@ -155,8 +155,8 @@ TEST_F(ActPolicyWithFivrParticipants, CanAddFivrDeviceAndTwoRadioDeviceWithinFre
         .WillOnce(Return(policyServicesObjects.participantProperties.at(2)));
     EXPECT_CALL(participantProperties, getDomainPropertiesSet(2))
         .WillOnce(Return(createDomainPropertiesSet(DomainType::Wireless, false, false, false, true)));
-    const Frequency wlanCenterFrequency(1900 * 1000 * 1000); // 190.0 MHz
-    const Frequency wlanSpread(50 * 1000 * 1000); // 50.0 MHz
+    const Frequency wlanCenterFrequency((UInt64)(190.0 * 1000 * 1000)); // 190.0 MHz
+    const Frequency wlanSpread(5 * 1000 * 1000); // 5.0 MHz
     RfProfileSupplementalData wlanSupplementalData(0, 0, 0, 0, RadioConnectionStatus::Connected, 0);
     RfProfileData wlanProfile(wlanCenterFrequency, wlanSpread / 2, wlanSpread / 2, 
         wlanSupplementalData);
@@ -171,8 +171,8 @@ TEST_F(ActPolicyWithFivrParticipants, CanAddFivrDeviceAndTwoRadioDeviceWithinFre
         .WillOnce(Return(policyServicesObjects.participantProperties.at(3)));
     EXPECT_CALL(participantProperties, getDomainPropertiesSet(3))
         .WillOnce(Return(createDomainPropertiesSet(DomainType::WWan, false, false, false, true)));
-    const Frequency wwanCenterFrequency(1900 * 1000 * 1000); // 190.0 MHz
-    const Frequency wwanSpread(50 * 1000 * 1000); // 50.0 MHz
+    const Frequency wwanCenterFrequency((UInt64)(190.0 * 1000 * 1000)); // 190.0 MHz
+    const Frequency wwanSpread(5 * 1000 * 1000); // 5.0 MHz
     RfProfileSupplementalData wwanSupplementalData(0, 0, 0, 0, RadioConnectionStatus::Connected, 0);
     RfProfileData wwanProfile(wwanCenterFrequency, wwanSpread / 2, wwanSpread / 2, 
         wwanSupplementalData);
@@ -192,8 +192,8 @@ TEST_F(ActPolicyWithFivrParticipants, CanAddFivrDeviceAndTwoRadioDeviceWithinFre
         .WillOnce(Return(policyServicesObjects.participantProperties.at(1)));
     EXPECT_CALL(participantProperties, getDomainPropertiesSet(1))
         .WillOnce(Return(createDomainPropertiesSet(DomainType::Processor, false, false, true, true)));
-    const Frequency fivrCenterFrequency(1730 * 1000 * 1000);
-    const Frequency fivrSpread(30 * 1000 * 1000); // 30.0 MHz
+    const Frequency fivrCenterFrequency((UInt64)(173.0 * 1000 * 1000));
+    const Frequency fivrSpread(3 * 1000 * 1000); // 3.0 MHz
     RfProfileSupplementalData fivrSupplementalData(0, 0, 0, 0, RadioConnectionStatus::Connected, 0);
     RfProfileData fivrProfile(fivrCenterFrequency, fivrSpread / 2, fivrSpread / 2, 
         fivrSupplementalData);
@@ -206,8 +206,8 @@ TEST_F(ActPolicyWithFivrParticipants, CanAddFivrDeviceAndTwoRadioDeviceWithinFre
         .WillOnce(Return(policyServicesObjects.participantProperties.at(3)));
     EXPECT_CALL(participantProperties, getDomainPropertiesSet(3))
         .WillOnce(Return(createDomainPropertiesSet(DomainType::WWan, false, false, false, true)));
-    const Frequency wwanCenterFrequency(1900 * 1000 * 1000); // 190.0 MHz
-    const Frequency wwanSpread(50 * 1000 * 1000); // 50.0 MHz
+    const Frequency wwanCenterFrequency((UInt64)(1900 * 1000 * 1000)); // 1.900 GHz
+    const Frequency wwanSpread(5 * 1000 * 1000); // 5.0 MHz
     RfProfileSupplementalData wwanSupplementalData(0, 0, 0, 0, RadioConnectionStatus::Connected, 0);
     RfProfileData wwanProfile(wwanCenterFrequency, wwanSpread / 2, wwanSpread / 2, 
         wwanSupplementalData);
@@ -222,8 +222,8 @@ TEST_F(ActPolicyWithFivrParticipants, CanAddFivrDeviceAndTwoRadioDeviceWithinFre
         .WillOnce(Return(policyServicesObjects.participantProperties.at(2)));
     EXPECT_CALL(participantProperties, getDomainPropertiesSet(2))
         .WillOnce(Return(createDomainPropertiesSet(DomainType::Wireless, false, false, false, true)));
-    const Frequency wlanCenterFrequency(1900 * 1000 * 1000); // 190.0 MHz
-    const Frequency wlanSpread(50 * 1000 * 1000); // 50.0 MHz
+    const Frequency wlanCenterFrequency((UInt64)(1900 * 1000 * 1000)); // 1.900 GHz
+    const Frequency wlanSpread(5 * 1000 * 1000); // 5.0 MHz
     RfProfileSupplementalData wlanSupplementalData(0, 0, 0, 0, RadioConnectionStatus::Connected, 0);
     RfProfileData wlanProfile(wlanCenterFrequency, wlanSpread / 2, wlanSpread / 2, 
         wlanSupplementalData);
@@ -243,8 +243,8 @@ TEST_F(ActPolicyWithFivrParticipants, ReactsToRadioConnectionStatusDisconnected)
         .WillOnce(Return(policyServicesObjects.participantProperties.at(1)));
     EXPECT_CALL(participantProperties, getDomainPropertiesSet(1))
         .WillOnce(Return(createDomainPropertiesSet(DomainType::Processor, false, false, true, true)));
-    const Frequency fivrCenterFrequency(1730 * 1000 * 1000);
-    const Frequency fivrSpread(30 * 1000 * 1000); // 30.0 MHz
+    const Frequency fivrCenterFrequency((UInt64)(173.0 * 1000 * 1000));
+    const Frequency fivrSpread(3 * 1000 * 1000); // 3.0 MHz
     RfProfileSupplementalData fivrSupplementalData(0, 0, 0, 0, RadioConnectionStatus::Connected, 0);
     RfProfileData fivrProfile(fivrCenterFrequency, fivrSpread / 2, fivrSpread / 2, 
         fivrSupplementalData);
@@ -256,15 +256,15 @@ TEST_F(ActPolicyWithFivrParticipants, ReactsToRadioConnectionStatusDisconnected)
     EXPECT_CALL(participantProperties, getParticipantProperties(2))
         .WillOnce(Return(policyServicesObjects.participantProperties.at(2)));
     EXPECT_CALL(participantProperties, getDomainPropertiesSet(2))
-        .WillOnce(Return(createDomainPropertiesSet(DomainType::WWan, false, false, false, true)));
-    const Frequency wwanCenterFrequency(1900 * 1000 * 1000); // 190.0 MHz
-    const Frequency wwanSpread(50 * 1000 * 1000); // 50.0 MHz
-    RfProfileSupplementalData wwanSupplementalData(0, 0, 0, 0, RadioConnectionStatus::Connected, 0);
-    RfProfileData wwanProfile(wwanCenterFrequency, wwanSpread / 2, wwanSpread / 2, 
-        wwanSupplementalData);
+        .WillOnce(Return(createDomainPropertiesSet(DomainType::Wireless, false, false, false, true)));
+    const Frequency wlanCenterFrequency((UInt64)(190.0 * 1000 * 1000)); // 190.0 MHz
+    const Frequency wlanSpread(5 * 1000 * 1000); // 5.0 MHz
+    RfProfileSupplementalData wlanSupplementalData(0, 0, 0, 0, RadioConnectionStatus::Connected, 0);
+    RfProfileData wlanProfile(wlanCenterFrequency, wlanSpread / 2, wlanSpread / 2, 
+        wlanSupplementalData);
     EXPECT_CALL(rfStatus, getRfProfileData(2, 0))
-        .WillOnce(Return(wwanProfile));
-    EXPECT_CALL(rfControl, setRfProfileCenterFrequency(1, 0, fivrClockHigh))
+        .WillOnce(Return(wlanProfile));
+    EXPECT_CALL(rfControl, setRfProfileCenterFrequency(1, 0, fivrClockLow))
         .Times(1);
     policy->bindParticipant(2);
     policy->bindDomain(2, 0);
@@ -282,8 +282,8 @@ TEST_F(ActPolicyWithFivrParticipants, ReactsToRadioConnectionStatusConnected)
         .WillOnce(Return(policyServicesObjects.participantProperties.at(1)));
     EXPECT_CALL(participantProperties, getDomainPropertiesSet(1))
         .WillOnce(Return(createDomainPropertiesSet(DomainType::Processor, false, false, true, true)));
-    const Frequency fivrCenterFrequency(1730 * 1000 * 1000);
-    const Frequency fivrSpread(30 * 1000 * 1000); // 30.0 MHz
+    const Frequency fivrCenterFrequency((UInt64)(173.0 * 1000 * 1000));
+    const Frequency fivrSpread(3 * 1000 * 1000); // 3.0 MHz
     RfProfileSupplementalData fivrSupplementalData(0, 0, 0, 0, RadioConnectionStatus::Connected, 0);
     RfProfileData fivrProfile(fivrCenterFrequency, fivrSpread / 2, fivrSpread / 2, 
         fivrSupplementalData);
@@ -295,9 +295,9 @@ TEST_F(ActPolicyWithFivrParticipants, ReactsToRadioConnectionStatusConnected)
     EXPECT_CALL(participantProperties, getParticipantProperties(2))
         .WillOnce(Return(policyServicesObjects.participantProperties.at(2)));
     EXPECT_CALL(participantProperties, getDomainPropertiesSet(2))
-        .WillOnce(Return(createDomainPropertiesSet(DomainType::WWan, false, false, false, true)));
-    const Frequency wwanCenterFrequency(1900 * 1000 * 1000); // 190.0 MHz
-    const Frequency wwanSpread(50 * 1000 * 1000); // 50.0 MHz
+        .WillOnce(Return(createDomainPropertiesSet(DomainType::Wireless, false, false, false, true)));
+    const Frequency wwanCenterFrequency((UInt64)(190.0 * 1000 * 1000)); // 190.0 MHz
+    const Frequency wwanSpread(5 * 1000 * 1000); // 5.0 MHz
     RfProfileSupplementalData wwanSupplementalData(0, 0, 0, 0, RadioConnectionStatus::NotConnected, 0);
     RfProfileData wwanProfile(wwanCenterFrequency, wwanSpread / 2, wwanSpread / 2, 
         wwanSupplementalData);
@@ -308,25 +308,28 @@ TEST_F(ActPolicyWithFivrParticipants, ReactsToRadioConnectionStatusConnected)
     policy->bindParticipant(2);
     policy->bindDomain(2, 0);
 
-    EXPECT_CALL(rfControl, setRfProfileCenterFrequency(1, 0, fivrClockHigh))
+    EXPECT_CALL(rfControl, setRfProfileCenterFrequency(1, 0, fivrClockLow))
         .Times(1);
     policy->domainRadioConnectionStatusChanged(2, RadioConnectionStatus::Connected);
 }
 
 const char* ExpectedStatusValuesChanged = "\
-<!-- format_id=CE-C4-49-18-3A-24-F3-49-B8-D5-F9-70-02-F3-8E-6A -->\n\
+<!-- format_id=49-18-CE-C4-3A-24-F3-49-B8-D5-F9-70-02-F3-8E-6A -->\n\
 <act_policy_status>\n\
 \t<fivr_device_list>\n\
 \t\t<fivr_device>\n\
 \t\t\t<participant_index>1</participant_index>\n\
+\t\t\t<participant_name>device1</participant_name>\n\
 \t\t\t<domain_index>0</domain_index>\n\
+\t\t\t<domain_name>Domain 0</domain_name>\n\
 \t\t\t<radio_frequency_control>\n\
 \t\t\t\t<supports_status_controls>true</supports_status_controls>\n\
 \t\t\t\t<supports_set_controls>true</supports_set_controls>\n\
+\t\t\t\t<last_set_frequency>139500000</last_set_frequency>\n\
 \t\t\t\t<radio_frequency_profile_data>\n\
-\t\t\t\t\t<center_frequency>1730000000</center_frequency>\n\
-\t\t\t\t\t<left_frequency_spread>15000000</left_frequency_spread>\n\
-\t\t\t\t\t<right_frequency_spread>15000000</right_frequency_spread>\n\
+\t\t\t\t\t<center_frequency>173000000</center_frequency>\n\
+\t\t\t\t\t<left_frequency_spread>1500000</left_frequency_spread>\n\
+\t\t\t\t\t<right_frequency_spread>1500000</right_frequency_spread>\n\
 \t\t\t\t\t<radio_frequency_supplemental_data>\n\
 \t\t\t\t\t\t<channel_number>0</channel_number>\n\
 \t\t\t\t\t\t<noise_power>0</noise_power>\n\
@@ -342,11 +345,13 @@ const char* ExpectedStatusValuesChanged = "\
 \t<radio_device_list>\n\
 \t\t<radio_device>\n\
 \t\t\t<participant_index>2</participant_index>\n\
+\t\t\t<participant_name>device2</participant_name>\n\
 \t\t\t<domain_index>0</domain_index>\n\
+\t\t\t<domain_name>Domain 0</domain_name>\n\
 \t\t\t<radio_frequency_profile_data>\n\
 \t\t\t\t<center_frequency>1900000000</center_frequency>\n\
-\t\t\t\t<left_frequency_spread>25000000</left_frequency_spread>\n\
-\t\t\t\t<right_frequency_spread>25000000</right_frequency_spread>\n\
+\t\t\t\t<left_frequency_spread>2500000</left_frequency_spread>\n\
+\t\t\t\t<right_frequency_spread>2500000</right_frequency_spread>\n\
 \t\t\t\t<radio_frequency_supplemental_data>\n\
 \t\t\t\t\t<channel_number>0</channel_number>\n\
 \t\t\t\t\t<noise_power>0</noise_power>\n\
@@ -360,11 +365,13 @@ const char* ExpectedStatusValuesChanged = "\
 \t\t</radio_device>\n\
 \t\t<radio_device>\n\
 \t\t\t<participant_index>3</participant_index>\n\
+\t\t\t<participant_name>device3</participant_name>\n\
 \t\t\t<domain_index>0</domain_index>\n\
+\t\t\t<domain_name>Domain 0</domain_name>\n\
 \t\t\t<radio_frequency_profile_data>\n\
 \t\t\t\t<center_frequency>1900000000</center_frequency>\n\
-\t\t\t\t<left_frequency_spread>25000000</left_frequency_spread>\n\
-\t\t\t\t<right_frequency_spread>25000000</right_frequency_spread>\n\
+\t\t\t\t<left_frequency_spread>2500000</left_frequency_spread>\n\
+\t\t\t\t<right_frequency_spread>2500000</right_frequency_spread>\n\
 \t\t\t\t<radio_frequency_supplemental_data>\n\
 \t\t\t\t\t<channel_number>0</channel_number>\n\
 \t\t\t\t\t<noise_power>0</noise_power>\n\
@@ -389,8 +396,8 @@ TEST_F(ActPolicyWithFivrParticipants, ShowsExpectedStatus)
         .WillOnce(Return(policyServicesObjects.participantProperties.at(1)));
     EXPECT_CALL(participantProperties, getDomainPropertiesSet(1))
         .WillOnce(Return(createDomainPropertiesSet(DomainType::Processor, false, false, true, true)));
-    const Frequency fivrCenterFrequency(1730 * 1000 * 1000);
-    const Frequency fivrSpread(30 * 1000 * 1000); // 30.0 MHz
+    const Frequency fivrCenterFrequency((UInt64)(173.0 * 1000 * 1000));
+    const Frequency fivrSpread(3 * 1000 * 1000); // 3.0 MHz
     RfProfileSupplementalData fivrSupplementalData(0, 0, 0, 0, RadioConnectionStatus::Connected, 0);
     RfProfileData fivrProfile(fivrCenterFrequency, fivrSpread / 2, fivrSpread / 2, 
         fivrSupplementalData);
@@ -403,8 +410,8 @@ TEST_F(ActPolicyWithFivrParticipants, ShowsExpectedStatus)
         .WillOnce(Return(policyServicesObjects.participantProperties.at(3)));
     EXPECT_CALL(participantProperties, getDomainPropertiesSet(3))
         .WillOnce(Return(createDomainPropertiesSet(DomainType::WWan, false, false, false, true)));
-    const Frequency wwanCenterFrequency(1900 * 1000 * 1000); // 190.0 MHz
-    const Frequency wwanSpread(50 * 1000 * 1000); // 50.0 MHz
+    const Frequency wwanCenterFrequency((UInt64)(1900 * 1000 * 1000)); // 1.900 GHz
+    const Frequency wwanSpread(5 * 1000 * 1000); // 5.0 MHz
     RfProfileSupplementalData wwanSupplementalData(0, 0, 0, 0, RadioConnectionStatus::Connected, 0);
     RfProfileData wwanProfile(wwanCenterFrequency, wwanSpread / 2, wwanSpread / 2, 
         wwanSupplementalData);
@@ -419,8 +426,8 @@ TEST_F(ActPolicyWithFivrParticipants, ShowsExpectedStatus)
         .WillOnce(Return(policyServicesObjects.participantProperties.at(2)));
     EXPECT_CALL(participantProperties, getDomainPropertiesSet(2))
         .WillOnce(Return(createDomainPropertiesSet(DomainType::Wireless, false, false, false, true)));
-    const Frequency wlanCenterFrequency(1900 * 1000 * 1000); // 190.0 MHz
-    const Frequency wlanSpread(50 * 1000 * 1000); // 50.0 MHz
+    const Frequency wlanCenterFrequency((UInt64)(1900 * 1000 * 1000)); // 1.900 GHz
+    const Frequency wlanSpread(5 * 1000 * 1000); // 5.0 MHz
     RfProfileSupplementalData wlanSupplementalData(0, 0, 0, 0, RadioConnectionStatus::Connected, 0);
     RfProfileData wlanProfile(wlanCenterFrequency, wlanSpread / 2, wlanSpread / 2, 
         wlanSupplementalData);
